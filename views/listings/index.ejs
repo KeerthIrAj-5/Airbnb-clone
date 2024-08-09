@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airbnb</title>
-</head>
+<% layout("/layouts/boilerplate") %>
 <body>
     <h3>All Listings</h3>
-    <form action="/listings/new" method="get">
+    <!-- <form action="/listings/new" method="get">
         <button>Create New</button>
-    </form>
+    </form> -->
     <ul>
         <%for(let list of result){%>
             <li><a href="http://localhost:3000/listings/<%=list._id%>"><%=list.title%></a></li>
@@ -17,4 +11,4 @@
         <%}%>
         </ul>
 </body>
-</html>
+

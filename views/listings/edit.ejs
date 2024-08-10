@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airbnb</title>
-</head>
-<body>
+<% layout("/layouts/boilerplate")%>
+<br>
+<h3>Edit your listing</h3>
     <form action="/listings/<%=list._id%>?_method=put" method="post">
         <input type="text" value="<%=list.title%>" name="listings[title]"><br><br>
         <textarea name="listings[description]"><%=list.description%></textarea><br><br>
@@ -16,5 +11,3 @@
         <button>Edit</button>
 
     </form>
-</body>
-</html>

@@ -12,3 +12,34 @@
 .nav-link{
     color:#222222 !important;
 }
+
+.f-info-links a{
+    text-decoration: none;
+    color:#222222;
+}
+.f-info-links a:hover{
+    text-decoration: underline;
+}
+
+.f-info-links,.f-info-socials,.f-info-brand{
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.f-info-socials i{
+    font-size:1.2rem;
+    margin-right: 2rem;
+}
+
+.f-info{
+    text-align: center;
+    height:8rem;
+    background-color:#ebebeb ;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: center;
+    align-items: space-evenly;
+
+}

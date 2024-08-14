@@ -5,10 +5,10 @@
         <!-- <form action="/listings/new" method="get">
         <button>Create New</button>
     </form> -->
-    <div class="row row-col-lg-3 row-col-md-3 row-col-sm-3">
+    <div class="row row-col-lg-4 row-col-md-4 row-col-sm-4">
         <%for(let list of result){%>
             <!-- <a href="/listings/<%=list._id%>" class="listing link"> -->
-                <div class="card" style="width: 20rem;">
+                <div class="card listing-card" style="width: 20rem;">
                     <a href="/listings/<%=list._id%>" class="listinglink">
                     <img src="<%=list.image%>" class="card-img-top" alt="Listing_image" style="height:20rem;">
                     <div class="card-img-overlay"></div>

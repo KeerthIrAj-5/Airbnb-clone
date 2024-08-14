@@ -8,6 +8,8 @@ const ejsmate=require("ejs-mate");
 const wrapAsync=require("./utils/wrapAsync.js")
 const ExpressError=require("./utils/ExpressError.js");
 const {listingSchema}=require("./schema.js");
+const Review=require("./models/review.js");
+const {reviewSchema}=require("./schema.js");
 
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'))
@@ -37,6 +39,18 @@ app.get(("/"),(req,res)=>{
 
 const validateListing=(req,res,next)=>{
     let {error}=listingSchema.validate(req.body);
+    
+    if(error){
+        let errmsg=error.details.map((el)=>el.message).join(",");
+        throw new ExpressError(400,errmsg);
+    }
+    else{
+        next();
+    }
+}
+
+const validateReview=(req,res,next)=>{
+    let {error}=reviewSchema.validate(req.body);
     
     if(error){
         let errmsg=error.details.map((el)=>el.message).join(",");
@@ -119,13 +133,35 @@ app.delete(("/listings/:id"),wrapAsync(async (req,res)=>{
     await Listing.findByIdAndDelete(id);
     res.redirect(`/listings`); 
 }));
+
+
+
 app.get(("/listings/:id"),wrapAsync(async (req,res)=>{
     let {id}=req.params;
     console.log(id);
-    const list=await Listing.findById(id);
+    const list=await Listing.findById(id).populate("reviews");
     console.log(list);
     res.render("listings/show.ejs",{list});
 }));
+
+app.post(("/listings/:id/reviews"),validateReview,wrapAsync(async (req,res)=>{
+    let listing=await Listing.findById(req.params.id);
+    let newReview=new Review(req.body.review);
+    listing.reviews.push(newReview);
+    await newReview.save();
+    await listing.save();
+
+    console.log("new review saved");
+    res.redirect(`/listings/${req.params.id}`);
+}));
+
+app.delete(("/listings/:id/reviews/:reviewId"),wrapAsync(async (req,res)=>{
+    let {id,reviewId}=req.params;
+    await Listing.findByIdAndUpdate(id,{$pull:{reviews: reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
+}));
+
 
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"Page not found"));

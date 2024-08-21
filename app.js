@@ -11,7 +11,25 @@ const {listingSchema}=require("./schema.js");
 const Review=require("./models/review.js");
 const {reviewSchema}=require("./schema.js");
 const listings=require("./routes/listing.js");
-const reviews=require("./routes/review.js");
+const reviews=require("./routes/review.js"); 
+const session=require("express-session"); 
+
+
+
+const sessionoption={
+    secret:"mysupersecretcode",
+    resave:false,
+    saveUninitialized:true ,
+    cookie:{
+            expires:Date.now()+7*24*60*60*1000 ,
+            maxAge:7*24*60*60*1000 ,
+            httpOnly:true 
+
+
+    },
+};
+
+app.use(session(sessionoption)); 
 
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'))

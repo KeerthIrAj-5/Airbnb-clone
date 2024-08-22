@@ -13,7 +13,7 @@ const {reviewSchema}=require("./schema.js");
 const listings=require("./routes/listing.js");
 const reviews=require("./routes/review.js"); 
 const session=require("express-session"); 
-
+const flash=require("connect-flash"); 
 
 
 const sessionoption={
@@ -29,7 +29,11 @@ const sessionoption={
     },
 };
 
+
+
 app.use(session(sessionoption)); 
+app.use(flash());
+
 
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'))
@@ -53,9 +57,7 @@ async function main(){
     await mongoose.connect(MONGO_URL);
 }
 
-app.get(("/"),(req,res)=>{
-    res.send("Hi i am root")
-});
+
 
 
 
@@ -75,12 +77,20 @@ app.get(("/"),(req,res)=>{
 // });
 
 
+app.use((req,res,next)=>{
+    res.locals.success=req.flash("success");
+    res.locals.failure=req.flash("failure");
+    next();
+});
+
 app.use("/listings",listings);
 
 app.use("/listings/:id/reviews",reviews);
 
 
-
+app.get(("/"),(req,res)=>{
+    res.send("Hi i am root")
+});
 
 app.all("*",(req,res,next)=>{
     next(new ExpressError(404,"Page not found"));

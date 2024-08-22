@@ -56,6 +56,7 @@ router.post(("/"),validateListing,wrapAsync(async (req,res,next)=>{
     //     throw new ExpressError(400,"Country is missing");
     // }
     await nl.save();
+    req.flash("success","New Listing Created");
     res.redirect("/listings");
 }));
 
@@ -63,7 +64,13 @@ router.post(("/"),validateListing,wrapAsync(async (req,res,next)=>{
 router.get(("/:id/edit"),wrapAsync(async (req,res)=>{
     let {id}=req.params;
     const list=await Listing.findById(id);
+    if(!list){
+        req.flash("failure"," Listing does not exist");
+        res.redirect("/listings");
+    }
+    else{
     res.render("listings/edit.ejs",{list});
+    }
 }));
 
 router.put(("/:id"),validateListing,wrapAsync(async (req,res)=>{
@@ -72,12 +79,15 @@ router.put(("/:id"),validateListing,wrapAsync(async (req,res)=>{
     // }
     let {id}=req.params;
     await Listing.findByIdAndUpdate(id,req.body.listings);
+    req.flash("success","Listing Updated");
     res.redirect(`/listings/${id}`);
 }));
 
 router.delete(("/:id"),wrapAsync(async (req,res)=>{
     let {id}=req.params;
     await Listing.findByIdAndDelete(id);
+    req.flash("success","Listing deleted");
+    console.log("Deleted listing");
     res.redirect(`/listings`); 
 }));
 
@@ -87,8 +97,14 @@ router.get(("/:id"),wrapAsync(async (req,res)=>{
     let {id}=req.params;
     console.log(id);
     const list=await Listing.findById(id).populate("reviews");
+    if(!list){
+        req.flash("failure"," Listing does not exist");
+        res.redirect("/listings");
+    }
+    else{
     console.log(list);
     res.render("listings/show.ejs",{list});
+    }
 }));
 
 module.exports=router;
